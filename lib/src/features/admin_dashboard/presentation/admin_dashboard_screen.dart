@@ -14,16 +14,16 @@ class AdminDashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
+        title: const Text('관리자 대시보드'),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt),
-            tooltip: 'Manage Orders',
+            tooltip: '주문 관리',
             onPressed: () => context.go('/admin/orders'),
           ),
           IconButton(
             icon: const Icon(Icons.people),
-            tooltip: 'Manage Users',
+            tooltip: '사용자 관리',
             onPressed: () => context.go('/admin/users'),
           ),
           IconButton(
@@ -73,7 +73,7 @@ class AdminDashboardScreen extends ConsumerWidget {
           },
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text('오류: $err')),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.go('/admin/dashboard/product/add'),

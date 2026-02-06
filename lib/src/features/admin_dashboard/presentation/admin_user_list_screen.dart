@@ -12,11 +12,11 @@ class AdminUserListScreen extends ConsumerWidget {
     final usersAsync = ref.watch(adminUsersProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('User Management')),
+      appBar: AppBar(title: const Text('사용자 관리')),
       body: usersAsync.when(
         data: (users) {
           if (users.isEmpty) {
-            return const Center(child: Text('No users found'));
+            return const Center(child: Text('사용자가 없습니다'));
           }
           return ListView.builder(
             itemCount: users.length,
@@ -26,10 +26,10 @@ class AdminUserListScreen extends ConsumerWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ListTile(
                   leading: CircleAvatar(
-                    child: Text(user.role == UserRole.admin ? 'A' : 'U'),
+                    child: Text(user.role == UserRole.admin ? '관' : '일'),
                   ),
                   title: Text(user.email),
-                  subtitle: Text('ID: ${user.id}'),
+                  subtitle: Text('아이디: ${user.id}'),
                   trailing: DropdownButton<UserRole>(
                     value: user.role,
                     onChanged: (newRole) async {
@@ -37,16 +37,16 @@ class AdminUserListScreen extends ConsumerWidget {
                          bool confirm = await showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text('Change Role'),
-                            content: Text("Change ${user.email}'s role to ${newRole.label}?"),
+                            title: const Text('권한 변경'),
+                            content: Text('${user.email}의 권한을 ${newRole.label}로 변경할까요?'),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(false),
-                                child: const Text('Cancel'),
+                                child: const Text('취소'),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(true),
-                                child: const Text('Confirm'),
+                                child: const Text('확인'),
                               ),
                             ],
                           ),
@@ -71,7 +71,7 @@ class AdminUserListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text('오류: $err')),
       ),
     );
   }

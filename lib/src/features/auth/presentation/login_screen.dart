@@ -37,7 +37,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _isLoading = false);
         if (!success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login failed. Check ID (Email format) & Password.')),
+            const SnackBar(content: Text('로그인 실패. 이메일 형식과 비밀번호를 확인해주세요.')),
           );
         }
       }
@@ -51,7 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!email.contains('@')) {
          setState(() => _isLoading = false);
          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please enter a valid email for Sign Up.')),
+            const SnackBar(content: Text('회원가입은 이메일 형식이 필요합니다.')),
           );
           return;
       }
@@ -64,11 +64,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _isLoading = false);
         if (success) {
            ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign Up successful! Please Login.')),
+            const SnackBar(content: Text('회원가입 완료. 로그인해주세요.')),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign Up failed. Email might be already in use.')),
+            const SnackBar(content: Text('회원가입 실패. 이미 사용 중인 이메일일 수 있어요.')),
           );
         }
       }
@@ -78,7 +78,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('로그인')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -89,20 +89,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: '이메일'),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Please enter email';
-                    if (!value.contains('@')) return 'Please enter a valid email';
+                    if (value == null || value.isEmpty) return '이메일을 입력해주세요';
+                    if (!value.contains('@')) return '유효한 이메일을 입력해주세요';
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  decoration: const InputDecoration(labelText: '비밀번호'),
                   obscureText: true,
                   validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter password' : null,
+                      value == null || value.isEmpty ? '비밀번호를 입력해주세요' : null,
                 ),
                 const SizedBox(height: 24),
                 Row(
@@ -110,12 +110,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: _login,
-                      child: const Text('Login'),
+                      child: const Text('로그인'),
                     ),
                     const SizedBox(width: 16),
                     TextButton(
                       onPressed: _signUp,
-                      child: const Text('Sign Up'),
+                      child: const Text('회원가입'),
                     ),
                   ],
                 ),

@@ -6,7 +6,18 @@ enum OrderStatus {
   delivered,
   cancelled;
 
-  String get label => name.toUpperCase();
+  String get label {
+    switch (this) {
+      case OrderStatus.pending:
+        return '대기';
+      case OrderStatus.shipped:
+        return '배송 중';
+      case OrderStatus.delivered:
+        return '배송 완료';
+      case OrderStatus.cancelled:
+        return '취소';
+    }
+  }
 }
 
 class Order {

@@ -11,9 +11,9 @@ class CartScreen extends ConsumerWidget {
     final total = ref.watch(cartTotalProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Shopping Cart')),
+      appBar: AppBar(title: const Text('장바구니')),
       body: cartItems.isEmpty
-          ? const Center(child: Text('Your Cart is Empty'))
+          ? const Center(child: Text('장바구니가 비어있습니다'))
           : Column(
               children: [
                 Expanded(
@@ -29,7 +29,7 @@ class CartScreen extends ConsumerWidget {
                           child: const Icon(Icons.image, color: Colors.grey),
                         ),
                         title: Text(item.product.title),
-                        subtitle: Text('\$${item.product.price} x ${item.quantity}'),
+                        subtitle: Text('\$${item.product.price} x ${item.quantity}개'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -74,7 +74,7 @@ class CartScreen extends ConsumerWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Total', style: TextStyle(color: Colors.grey)),
+                          const Text('합계', style: TextStyle(color: Colors.grey)),
                           Text(
                             '\$${total.toStringAsFixed(2)}',
                             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -85,10 +85,10 @@ class CartScreen extends ConsumerWidget {
                         onPressed: () {
                           // Implement Checkout
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Checkout functionality not implemented yet.')),
+                            const SnackBar(content: Text('결제 기능은 아직 준비 중입니다.')),
                           );
                         },
-                        child: const Text('Checkout'),
+                        child: const Text('결제하기'),
                       ),
                     ],
                   ),

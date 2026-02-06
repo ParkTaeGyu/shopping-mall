@@ -20,12 +20,12 @@ class MockAuthController extends StateNotifier<AppUser?> implements AuthControll
 
   @override
   Future<bool> login({required String email, required String password}) async {
-    if (email == 'test1' && password == '1111') {
-      state = const AppUser(uid: 'user_uid', email: 'test1', role: UserRole.user);
+    if (email == 'test1@example.com' && password == '1111') {
+      state = const AppUser(uid: 'user_uid', email: 'test1@example.com', role: UserRole.user);
       return true;
     }
-    if (email == 'admin' && password == '1111') {
-      state = const AppUser(uid: 'admin_uid', email: 'admin', role: UserRole.admin);
+    if (email == 'admin@example.com' && password == '1111') {
+      state = const AppUser(uid: 'admin_uid', email: 'admin@example.com', role: UserRole.admin);
       return true;
     }
     return false;
@@ -160,16 +160,16 @@ void main() {
     );
 
     // Verify Login Screen
-    expect(find.text('Login'), findsAtLeastNWidgets(1));
+    expect(find.text('로그인'), findsAtLeastNWidgets(1));
 
     // Login as User
-    await tester.enterText(find.byType(TextFormField).first, 'test1');
+    await tester.enterText(find.byType(TextFormField).first, 'test1@example.com');
     await tester.enterText(find.byType(TextFormField).last, '1111');
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.tap(find.widgetWithText(ElevatedButton, '로그인'));
     await tester.pumpAndSettle();
 
     // Verify Home Screen UI
-    expect(find.text('Shop by Category'), findsOneWidget);
+    expect(find.text('카테고리별 쇼핑'), findsOneWidget);
   });
 
   testWidgets('Admin flow test', (WidgetTester tester) async {
@@ -191,20 +191,20 @@ void main() {
     );
 
     // Login as Admin
-    await tester.enterText(find.byType(TextFormField).first, 'admin');
+    await tester.enterText(find.byType(TextFormField).first, 'admin@example.com');
     await tester.enterText(find.byType(TextFormField).last, '1111');
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.tap(find.widgetWithText(ElevatedButton, '로그인'));
     await tester.pumpAndSettle();
 
     // Verify Admin Dashboard
-    expect(find.text('Admin Dashboard'), findsOneWidget);
+    expect(find.text('관리자 대시보드'), findsOneWidget);
 
     // Navigate to Users
     await tester.tap(find.byIcon(Icons.people));
     await tester.pumpAndSettle();
 
     // Verify User List
-    expect(find.text('User Management'), findsOneWidget);
+    expect(find.text('사용자 관리'), findsOneWidget);
     expect(find.text('test1@test.com'), findsOneWidget);
   });
 }

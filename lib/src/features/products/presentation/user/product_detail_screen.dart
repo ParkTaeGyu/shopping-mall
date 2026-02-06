@@ -18,7 +18,7 @@ class ProductDetailScreen extends ConsumerWidget {
           if (product == null) {
             return Scaffold(
               appBar: AppBar(),
-              body: const Center(child: Text('Product not found')),
+              body: const Center(child: Text('상품을 찾을 수 없습니다')),
             );
           }
           return Scaffold(
@@ -71,10 +71,10 @@ class ProductDetailScreen extends ConsumerWidget {
                       onPressed: () {
                         ref.read(cartServiceProvider.notifier).addItem(product);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${product.title} added to cart')),
+                          SnackBar(content: Text('${product.title} 장바구니에 담겼습니다')),
                         );
                       },
-                      child: const Text('Add to Cart'),
+                      child: const Text('장바구니 담기'),
                     ),
                   ),
                 ),
@@ -88,7 +88,7 @@ class ProductDetailScreen extends ConsumerWidget {
         ),
         error: (err, stack) => Scaffold(
           appBar: AppBar(),
-          body: Center(child: Text('Error: $err')),
+          body: Center(child: Text('오류: $err')),
         ),
       ),
     );

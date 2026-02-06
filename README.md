@@ -1,4 +1,4 @@
-# Shopping Mall (Flutter Web)
+# 미용재료 쇼핑몰 (Flutter Web)
 
 미용재료 쇼핑몰을 **Flutter Web** 중심으로 운영하는 프로젝트입니다. 관리자와 고객 화면이 분리되어 있고, Supabase 인증을 사용합니다.
 

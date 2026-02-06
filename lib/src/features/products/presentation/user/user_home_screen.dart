@@ -10,7 +10,7 @@ class UserHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Copang Store'),
+        title: const Text('미용재료 쇼핑몰'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -34,7 +34,7 @@ class UserHomeScreen extends ConsumerWidget {
                   children: [
                     Icon(Icons.image, size: 50, color: Colors.grey),
                     SizedBox(height: 8),
-                    Text('Promotional Banner Placeholder'),
+                    Text('프로모션 배너 영역'),
                   ],
                 ),
               ),
@@ -47,7 +47,7 @@ class UserHomeScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Shop by Category',
+                    '카테고리별 쇼핑',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
@@ -58,10 +58,10 @@ class UserHomeScreen extends ConsumerWidget {
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
                     children: const [
-                      _CategoryItem(icon: Icons.cut, label: 'Hair'),
-                      _CategoryItem(icon: Icons.face, label: 'Skin'),
-                      _CategoryItem(icon: Icons.brush, label: 'Makeup'),
-                      _CategoryItem(icon: Icons.spa, label: 'Nail'),
+                      _CategoryItem(icon: Icons.cut, value: 'Hair', label: '헤어'),
+                      _CategoryItem(icon: Icons.face, value: 'Skin', label: '스킨'),
+                      _CategoryItem(icon: Icons.brush, value: 'Makeup', label: '메이크업'),
+                      _CategoryItem(icon: Icons.spa, value: 'Nail', label: '네일'),
                     ],
                   ),
                 ],
@@ -76,14 +76,15 @@ class UserHomeScreen extends ConsumerWidget {
 
 class _CategoryItem extends StatelessWidget {
   final IconData icon;
+  final String value;
   final String label;
 
-  const _CategoryItem({required this.icon, required this.label});
+  const _CategoryItem({required this.icon, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go('/category/$label'),
+      onTap: () => context.go('/category/$value'),
       child: Column(
         children: [
           CircleAvatar(

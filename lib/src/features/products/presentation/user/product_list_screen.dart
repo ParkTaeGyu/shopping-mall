@@ -17,7 +17,7 @@ class ProductListScreen extends ConsumerWidget {
       body: productsAsync.when(
         data: (products) {
           if (products.isEmpty) {
-            return const Center(child: Text('No products found in this category.'));
+            return const Center(child: Text('이 카테고리에 상품이 없습니다.'));
           }
           return GridView.builder(
             padding: const EdgeInsets.all(16),
@@ -67,7 +67,7 @@ class ProductListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text('오류: $err')),
       ),
     );
   }

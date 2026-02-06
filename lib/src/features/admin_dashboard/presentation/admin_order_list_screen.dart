@@ -11,11 +11,11 @@ class AdminOrderListScreen extends ConsumerWidget {
     final ordersAsync = ref.watch(adminOrdersProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Order Management')),
+      appBar: AppBar(title: const Text('주문 관리')),
       body: ordersAsync.when(
         data: (orders) {
           if (orders.isEmpty) {
-            return const Center(child: Text('No orders found'));
+            return const Center(child: Text('주문이 없습니다'));
           }
           return ListView.builder(
             itemCount: orders.length,
@@ -24,16 +24,16 @@ class AdminOrderListScreen extends ConsumerWidget {
               return Card(
                 margin: const EdgeInsets.all(8),
                 child: ExpansionTile(
-                  title: Text('Order #${order.id}'),
+                  title: Text('주문 #${order.id}'),
                   subtitle: Text(
-                    '${order.createdAt.toString().split('.')[0]} - \$${order.totalAmount}\nStatus: ${order.status.label}',
+                    '${order.createdAt.toString().split('.')[0]} - \$${order.totalAmount}\n상태: ${order.status.label}',
                   ),
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
                         children: [
-                          const Text('Update Status: '),
+                          const Text('상태 변경: '),
                           const SizedBox(width: 10),
                           DropdownButton<app_order.OrderStatus>(
                             value: order.status,
@@ -60,7 +60,7 @@ class AdminOrderListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text('오류: $err')),
       ),
     );
   }

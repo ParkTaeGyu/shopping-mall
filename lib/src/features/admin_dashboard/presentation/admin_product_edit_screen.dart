@@ -65,7 +65,7 @@ class _AdminProductEditScreenState extends ConsumerState<AdminProductEditScreen>
 
       if (mounted) context.pop();
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('오류: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -74,7 +74,7 @@ class _AdminProductEditScreenState extends ConsumerState<AdminProductEditScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.productId == null ? 'Add Product' : 'Edit Product')),
+      appBar: AppBar(title: Text(widget.productId == null ? '상품 추가' : '상품 수정')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -85,33 +85,33 @@ class _AdminProductEditScreenState extends ConsumerState<AdminProductEditScreen>
                   children: [
                     TextFormField(
                       controller: _titleController,
-                      decoration: const InputDecoration(labelText: 'Title'),
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
+                      decoration: const InputDecoration(labelText: '상품명'),
+                      validator: (v) => v!.isEmpty ? '필수 입력' : null,
                     ),
                     TextFormField(
                       controller: _descriptionController,
-                      decoration: const InputDecoration(labelText: 'Description'),
+                      decoration: const InputDecoration(labelText: '설명'),
                       maxLines: 3,
                     ),
                     TextFormField(
                       controller: _priceController,
-                      decoration: const InputDecoration(labelText: 'Price'),
+                      decoration: const InputDecoration(labelText: '가격'),
                       keyboardType: TextInputType.number,
-                      validator: (v) => double.tryParse(v!) == null ? 'Invalid number' : null,
+                      validator: (v) => double.tryParse(v!) == null ? '올바른 숫자를 입력해주세요' : null,
                     ),
                     TextFormField(
                       controller: _imageUrlController,
-                      decoration: const InputDecoration(labelText: 'Image URL'),
+                      decoration: const InputDecoration(labelText: '이미지 주소'),
                     ),
                     TextFormField(
                       controller: _categoryController,
-                      decoration: const InputDecoration(labelText: 'Category'),
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
+                      decoration: const InputDecoration(labelText: '카테고리'),
+                      validator: (v) => v!.isEmpty ? '필수 입력' : null,
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _save,
-                      child: const Text('Save'),
+                      child: const Text('저장'),
                     ),
                   ],
                 ),

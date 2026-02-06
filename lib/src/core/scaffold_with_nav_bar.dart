@@ -27,22 +27,22 @@ class ScaffoldWithNavBar extends StatelessWidget {
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
-            label: 'Home',
+            label: '홈',
           ),
           NavigationDestination(
             icon: Icon(Icons.grid_view_outlined),
             selectedIcon: Icon(Icons.grid_view),
-            label: 'Categories',
+            label: '카테고리',
           ),
           NavigationDestination(
             icon: Icon(Icons.shopping_cart_outlined),
             selectedIcon: Icon(Icons.shopping_cart),
-            label: 'Cart',
+            label: '장바구니',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outlined),
             selectedIcon: Icon(Icons.person),
-            label: 'Profile',
+            label: '내 정보',
           ),
         ],
       ),

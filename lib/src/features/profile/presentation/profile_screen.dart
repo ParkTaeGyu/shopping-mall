@@ -8,13 +8,13 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: const Text('내 정보')),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
             ref.read(authControllerProvider.notifier).logout();
           },
-          child: const Text('Logout'),
+          child: const Text('로그아웃'),
         ),
       ),
     );
