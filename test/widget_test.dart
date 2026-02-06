@@ -1,10 +1,3 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +18,10 @@ class MockAuthController extends StateNotifier<AppUser?> implements AuthControll
       state = const AppUser(uid: 'user_uid', email: 'test1', role: UserRole.user);
       return true;
     }
+    if (email == 'admin' && password == '1111') {
+      state = const AppUser(uid: 'admin_uid', email: 'admin', role: UserRole.admin);
+      return true;
+    }
     return false;
   }
 
@@ -36,44 +33,48 @@ class MockAuthController extends StateNotifier<AppUser?> implements AuthControll
 
 // Mock Product Repository
 class MockProductRepository implements SupabaseProductRepository {
-  @override
-  Future<List<Product>> getProducts() async {
-    return [
-      const Product(
-        id: '1',
-        title: 'Premium Hair Shampoo',
-        description: 'Desc',
-        price: 25.0,
-        imageUrl: '',
-        category: 'Hair',
-      ),
-    ];
-  }
-
-  @override
-  Future<List<Product>> getProductsByCategory(String category) async {
-    return [
-      const Product(
-        id: '1',
-        title: 'Premium Hair Shampoo',
-        description: 'Desc',
-        price: 25.0,
-        imageUrl: '',
-        category: 'Hair',
-      ),
-    ];
-  }
-
-  @override
-  Future<Product?> getProduct(String id) async {
-    return const Product(
+  final List<Product> _products = [
+    const Product(
       id: '1',
       title: 'Premium Hair Shampoo',
       description: 'Desc',
       price: 25.0,
       imageUrl: '',
       category: 'Hair',
-    );
+    ),
+  ];
+
+  @override
+  Future<List<Product>> getProducts() async {
+    return _products;
+  }
+
+  @override
+  Future<List<Product>> getProductsByCategory(String category) async {
+    return _products.where((p) => p.category == category).toList();
+  }
+
+  @override
+  Future<Product?> getProduct(String id) async {
+    return _products.firstWhere((p) => p.id == id, orElse: () => _products.first);
+  }
+
+  @override
+  Future<void> addProduct(Product product) async {
+    _products.add(product);
+  }
+
+  @override
+  Future<void> updateProduct(Product product) async {
+    final index = _products.indexWhere((p) => p.id == product.id);
+    if (index != -1) {
+      _products[index] = product;
+    }
+  }
+
+  @override
+  Future<void> deleteProduct(String id) async {
+    _products.removeWhere((p) => p.id == id);
   }
   
   @override
@@ -137,5 +138,52 @@ void main() {
     expect(find.text('Shopping Cart'), findsOneWidget);
     expect(find.text('Premium Hair Shampoo'), findsOneWidget);
     expect(find.text('\$25.00'), findsOneWidget); // Total
+  });
+
+  testWidgets('Admin flow test', (WidgetTester tester) async {
+    final mockAuth = MockAuthController();
+    final mockRepo = MockProductRepository();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authControllerProvider.overrideWith((ref) => mockAuth),
+          supabaseProductRepositoryProvider.overrideWithValue(mockRepo),
+        ],
+        child: const MyApp(),
+      ),
+    );
+
+    // Login as Admin
+    await tester.enterText(find.byType(TextFormField).first, 'admin');
+    await tester.enterText(find.byType(TextFormField).last, '1111');
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.pumpAndSettle();
+
+    // Verify Admin Dashboard
+    expect(find.text('Admin Dashboard'), findsOneWidget);
+    expect(find.byType(FloatingActionButton), findsOneWidget);
+
+    // Navigate to Add Product
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    // Verify Add Product Screen
+    expect(find.text('Add Product'), findsOneWidget);
+    expect(find.text('Title'), findsOneWidget);
+    expect(find.text('Category'), findsOneWidget);
+
+    // Fill form
+    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'New Product');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Price'), '100');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Category'), 'Hair');
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Save'));
+    await tester.pumpAndSettle();
+
+    // Verify back to dashboard and product might be in list (if list refreshed)
+    expect(find.text('Admin Dashboard'), findsOneWidget);
+    // Note: MockRepo is ephemeral, but since we modify the list in memory of the same instance, it might show up if we refresh provider?
+    // Riverpod provider invalidation in test might need handling.
+    // Ideally, we verify the call was made or just the UI navigation.
   });
 }

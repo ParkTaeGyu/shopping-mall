@@ -46,13 +46,36 @@ class SupabaseProductRepository {
       category: json['category'],
     )).toList();
   }
+
+  Future<void> addProduct(Product product) async {
+    await _client.from('products').insert({
+      'title': product.title,
+      'description': product.description,
+      'price': product.price,
+      'image_url': product.imageUrl,
+      'category': product.category,
+    });
+  }
+
+  Future<void> updateProduct(Product product) async {
+    await _client.from('products').update({
+      'title': product.title,
+      'description': product.description,
+      'price': product.price,
+      'image_url': product.imageUrl,
+      'category': product.category,
+    }).eq('id', product.id);
+  }
+
+  Future<void> deleteProduct(String id) async {
+    await _client.from('products').delete().eq('id', id);
+  }
 }
 
 final supabaseProductRepositoryProvider = Provider<SupabaseProductRepository>((ref) {
   return SupabaseProductRepository(Supabase.instance.client);
 });
 
-// Update these providers to use FutureProvider instead of Provider because DB calls are async
 final productsListProvider = FutureProvider.family<List<Product>, String>((ref, category) {
   final repository = ref.watch(supabaseProductRepositoryProvider);
   if (category == 'all') {
