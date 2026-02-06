@@ -1,6 +1,8 @@
 enum UserRole {
   admin,
-  user,
+  user;
+
+  String get label => name.toUpperCase();
 }
 
 class AppUser {

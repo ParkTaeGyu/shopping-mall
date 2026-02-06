@@ -3,13 +3,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../domain/app_user.dart';
 import '../data/user_mapper.dart';
 
+final authControllerProvider = StateNotifierProvider<AuthController, AppUser?>((ref) {
+  return AuthController();
+});
+
 class AuthController extends StateNotifier<AppUser?> {
   AuthController() : super(null) {
     _init();
   }
 
   void _init() {
-    // Listen to auth state changes
     Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
       if (session != null) {
@@ -28,6 +31,19 @@ class AuthController extends StateNotifier<AppUser?> {
       );
       return true;
     } catch (e) {
+      // print('Login error: $e'); // Good for debugging
+      return false; // Could return specific error enum/message
+    }
+  }
+
+  Future<bool> signUp({required String email, required String password}) async {
+    try {
+      await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+      );
+      return true;
+    } catch (e) {
       return false;
     }
   }
@@ -36,7 +52,3 @@ class AuthController extends StateNotifier<AppUser?> {
     await Supabase.instance.client.auth.signOut();
   }
 }
-
-final authControllerProvider = StateNotifierProvider<AuthController, AppUser?>((ref) {
-  return AuthController();
-});

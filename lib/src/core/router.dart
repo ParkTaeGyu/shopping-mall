@@ -8,6 +8,7 @@ import '../features/products/presentation/user/user_home_screen.dart';
 import '../features/admin_dashboard/presentation/admin_dashboard_screen.dart';
 import '../features/admin_dashboard/presentation/admin_product_edit_screen.dart';
 import '../features/admin_dashboard/presentation/admin_order_list_screen.dart';
+import '../features/admin_dashboard/presentation/admin_user_list_screen.dart';
 import '../features/products/presentation/user/categories_screen.dart';
 import '../features/cart/presentation/cart_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
@@ -67,6 +68,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/admin/orders',
         builder: (context, state) => const AdminOrderListScreen(),
+      ),
+      GoRoute(
+        path: '/admin/users',
+        builder: (context, state) => const AdminUserListScreen(),
       ),
       // User Shell
       StatefulShellRoute.indexedStack(

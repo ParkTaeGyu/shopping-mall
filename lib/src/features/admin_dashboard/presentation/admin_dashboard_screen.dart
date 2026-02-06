@@ -22,6 +22,11 @@ class AdminDashboardScreen extends ConsumerWidget {
             onPressed: () => context.go('/admin/orders'),
           ),
           IconButton(
+            icon: const Icon(Icons.people),
+            tooltip: 'Manage Users',
+            onPressed: () => context.go('/admin/users'),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => ref.read(authControllerProvider.notifier).logout(),
           ),

@@ -15,6 +15,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -25,15 +26,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+      // Supabase requires email format
+      final email = _emailController.text.trim();
       final success = await ref.read(authControllerProvider.notifier).login(
-            email: _emailController.text,
+            email: email,
             password: _passwordController.text,
           );
+      if (mounted) {
+        setState(() => _isLoading = false);
+        if (!success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login failed. Check ID (Email format) & Password.')),
+          );
+        }
+      }
+    }
+  }
 
-      if (!success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid credentials')),
-        );
+  Future<void> _signUp() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+      final email = _emailController.text.trim();
+      if (!email.contains('@')) {
+         setState(() => _isLoading = false);
+         ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please enter a valid email for Sign Up.')),
+          );
+          return;
+      }
+      
+      final success = await ref.read(authControllerProvider.notifier).signUp(
+            email: email,
+            password: _passwordController.text,
+          );
+      if (mounted) {
+        setState(() => _isLoading = false);
+        if (success) {
+           ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign Up successful! Please Login.')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign Up failed. Email might be already in use.')),
+          );
+        }
       }
     }
   }
@@ -52,9 +89,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'ID'),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter ID' : null,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Please enter email';
+                    if (!value.contains('@')) return 'Please enter a valid email';
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -65,9 +105,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       value == null || value.isEmpty ? 'Please enter password' : null,
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: const Text('Login'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _login,
+                      child: const Text('Login'),
+                    ),
+                    const SizedBox(width: 16),
+                    TextButton(
+                      onPressed: _signUp,
+                      child: const Text('Sign Up'),
+                    ),
+                  ],
                 ),
               ],
             ),
