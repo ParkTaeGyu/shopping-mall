@@ -10,11 +10,91 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:copang/src/app.dart';
+import 'package:copang/src/features/auth/domain/app_user.dart';
+import 'package:copang/src/features/auth/presentation/auth_controller.dart';
+import 'package:copang/src/features/products/domain/product.dart';
+import 'package:copang/src/features/products/data/supabase_product_repository.dart';
+
+// Mock AuthController
+class MockAuthController extends StateNotifier<AppUser?> implements AuthController {
+  MockAuthController() : super(null);
+
+  @override
+  Future<bool> login({required String email, required String password}) async {
+    if (email == 'test1' && password == '1111') {
+      state = const AppUser(uid: 'user_uid', email: 'test1', role: UserRole.user);
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<void> logout() async {
+    state = null;
+  }
+}
+
+// Mock Product Repository
+class MockProductRepository implements SupabaseProductRepository {
+  @override
+  Future<List<Product>> getProducts() async {
+    return [
+      const Product(
+        id: '1',
+        title: 'Premium Hair Shampoo',
+        description: 'Desc',
+        price: 25.0,
+        imageUrl: '',
+        category: 'Hair',
+      ),
+    ];
+  }
+
+  @override
+  Future<List<Product>> getProductsByCategory(String category) async {
+    return [
+      const Product(
+        id: '1',
+        title: 'Premium Hair Shampoo',
+        description: 'Desc',
+        price: 25.0,
+        imageUrl: '',
+        category: 'Hair',
+      ),
+    ];
+  }
+
+  @override
+  Future<Product?> getProduct(String id) async {
+    return const Product(
+      id: '1',
+      title: 'Premium Hair Shampoo',
+      description: 'Desc',
+      price: 25.0,
+      imageUrl: '',
+      category: 'Hair',
+    );
+  }
+  
+  @override
+  // ignore: unused_element
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+  testWidgets('App flow test with mocks', (WidgetTester tester) async {
+    final mockAuth = MockAuthController();
+    final mockRepo = MockProductRepository();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authControllerProvider.overrideWith((ref) => mockAuth),
+          supabaseProductRepositoryProvider.overrideWithValue(mockRepo),
+        ],
+        child: const MyApp(),
+      ),
+    );
 
     // Verify that the LoginScreen is displayed initially
     expect(find.text('Login'), findsAtLeastNWidgets(1));
@@ -44,13 +124,13 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify Product Detail & Add to Cart
-    expect(find.text('Premium Hair Shampoo'), findsOneWidget);
+    expect(find.text('Premium Hair Shampoo'), findsNWidgets(2)); // AppBar + Body
     await tester.tap(find.widgetWithText(ElevatedButton, 'Add to Cart'));
     await tester.pumpAndSettle();
     expect(find.text('Premium Hair Shampoo added to cart'), findsOneWidget);
 
     // Go to Cart Tab
-    await tester.tap(find.byIcon(Icons.shopping_cart));
+    await tester.tap(find.byIcon(Icons.shopping_cart_outlined));
     await tester.pumpAndSettle();
 
     // Verify Cart Content
