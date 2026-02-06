@@ -19,5 +19,16 @@ void main() {
     // Verify that the LoginScreen is displayed initially
     expect(find.text('Login'), findsAtLeastNWidgets(1));
     expect(find.byType(TextFormField), findsNWidgets(2));
+
+    // Login as User
+    await tester.enterText(find.byType(TextFormField).first, 'test1');
+    await tester.enterText(find.byType(TextFormField).last, '1111');
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.pumpAndSettle();
+
+    // Verify Home Screen UI
+    expect(find.text('Shop by Category'), findsOneWidget);
+    expect(find.text('Hair'), findsOneWidget);
+    expect(find.byIcon(Icons.home), findsOneWidget); // Bottom Nav Home Icon
   });
 }
