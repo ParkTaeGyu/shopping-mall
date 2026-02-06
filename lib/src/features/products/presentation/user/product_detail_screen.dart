@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/fake_product_repository.dart';
+import '../../../cart/application/cart_service.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   final String productId;
@@ -63,6 +64,7 @@ class ProductDetailScreen extends ConsumerWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
+                  ref.read(cartServiceProvider.notifier).addItem(product);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('${product.title} added to cart')),
                   );

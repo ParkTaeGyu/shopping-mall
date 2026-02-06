@@ -38,5 +38,24 @@ void main() {
     // Verify Product List Screen
     expect(find.text('Hair'), findsOneWidget); // AppBar title
     expect(find.text('Premium Hair Shampoo'), findsOneWidget); // Product Item
+
+    // Tap on Product
+    await tester.tap(find.text('Premium Hair Shampoo'));
+    await tester.pumpAndSettle();
+
+    // Verify Product Detail & Add to Cart
+    expect(find.text('Premium Hair Shampoo'), findsOneWidget);
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Add to Cart'));
+    await tester.pumpAndSettle();
+    expect(find.text('Premium Hair Shampoo added to cart'), findsOneWidget);
+
+    // Go to Cart Tab
+    await tester.tap(find.byIcon(Icons.shopping_cart));
+    await tester.pumpAndSettle();
+
+    // Verify Cart Content
+    expect(find.text('Shopping Cart'), findsOneWidget);
+    expect(find.text('Premium Hair Shampoo'), findsOneWidget);
+    expect(find.text('\$25.00'), findsOneWidget); // Total
   });
 }
