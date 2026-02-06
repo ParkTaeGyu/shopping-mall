@@ -30,5 +30,13 @@ void main() {
     expect(find.text('Shop by Category'), findsOneWidget);
     expect(find.text('Hair'), findsOneWidget);
     expect(find.byIcon(Icons.home), findsOneWidget); // Bottom Nav Home Icon
+
+    // Navigate to Product List (Hair)
+    await tester.tap(find.text('Hair'));
+    await tester.pumpAndSettle();
+
+    // Verify Product List Screen
+    expect(find.text('Hair'), findsOneWidget); // AppBar title
+    expect(find.text('Premium Hair Shampoo'), findsOneWidget); // Product Item
   });
 }

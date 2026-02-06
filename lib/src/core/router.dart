@@ -9,6 +9,8 @@ import '../features/admin_dashboard/presentation/admin_dashboard_screen.dart';
 import '../features/products/presentation/user/categories_screen.dart';
 import '../features/cart/presentation/cart_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
+import '../features/products/presentation/user/product_list_screen.dart';
+import '../features/products/presentation/user/product_detail_screen.dart';
 import 'scaffold_with_nav_bar.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -61,6 +63,22 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/',
                 builder: (context, state) => const UserHomeScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'category/:id',
+                    builder: (context, state) {
+                      final categoryId = state.pathParameters['id']!;
+                      return ProductListScreen(category: categoryId);
+                    },
+                  ),
+                  GoRoute(
+                    path: 'product/:id',
+                    builder: (context, state) {
+                      final productId = state.pathParameters['id']!;
+                      return ProductDetailScreen(productId: productId);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
