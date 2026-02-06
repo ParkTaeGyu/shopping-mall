@@ -1,0 +1,55 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../features/auth/domain/app_user.dart';
+import '../features/auth/presentation/auth_controller.dart';
+import '../features/auth/presentation/login_screen.dart';
+import '../features/products/presentation/user/user_home_screen.dart';
+import '../features/admin_dashboard/presentation/admin_dashboard_screen.dart';
+
+final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authControllerProvider);
+
+  return GoRouter(
+    initialLocation: '/',
+    refreshListenable: ValueNotifier(authState), // Re-evaluate logic when User changes
+    redirect: (context, state) {
+      final isLoggedIn = authState != null;
+      final isLoggingIn = state.uri.toString() == '/login';
+
+      if (!isLoggedIn && !isLoggingIn) return '/login';
+
+      if (isLoggedIn) {
+        final isAdmin = authState.role == UserRole.admin;
+        final isGoingToAdmin = state.uri.toString().startsWith('/admin');
+
+        // Redirect Admin to /admin if not already there
+        if (isAdmin && !isGoingToAdmin) return '/admin/dashboard';
+
+        // Redirect User to / if trying to access admin
+        if (!isAdmin && isGoingToAdmin) return '/';
+
+        // Redirect logged in user from login page to home
+        if (isLoggingIn) {
+             return isAdmin ? '/admin/dashboard' : '/';
+        }
+      }
+
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const UserHomeScreen(),
+      ),
+      GoRoute(
+        path: '/admin/dashboard',
+        builder: (context, state) => const AdminDashboardScreen(),
+      ),
+    ],
+  );
+});
