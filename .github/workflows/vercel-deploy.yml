@@ -20,8 +20,15 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Create .env for build
+        run: |
+          cat <<'EOF' > .env
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          EOF
+
       - name: Build web
-        run: flutter build web --release
+        run: flutter build web --release --no-wasm-dry-run
 
       - name: Copy Vercel config
         run: cp vercel.json build/web/vercel.json
