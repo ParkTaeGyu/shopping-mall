@@ -17,6 +17,11 @@ class AdminDashboardScreen extends ConsumerWidget {
         title: const Text('Admin Dashboard'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.list_alt),
+            tooltip: 'Manage Orders',
+            onPressed: () => context.go('/admin/orders'),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => ref.read(authControllerProvider.notifier).logout(),
           ),
