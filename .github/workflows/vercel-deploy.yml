@@ -20,9 +20,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Create .env for build
+      - name: Create env file for build
         run: |
-          cat <<'EOF' > .env
+          mkdir -p assets/env
+          cat <<'EOF' > assets/env/app.env
           SUPABASE_URL=${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
           EOF

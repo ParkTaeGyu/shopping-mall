@@ -6,7 +6,7 @@ import 'src/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: "assets/env/app.env");
   
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL'] ?? '',
