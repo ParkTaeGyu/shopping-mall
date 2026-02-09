@@ -6,16 +6,16 @@
 
 ```mermaid
 flowchart LR
-  A[Guest] -->|Login| B[Supabase Auth]
-  B -->|role=admin| C[Admin Area]
-  B -->|role=user| D[Customer Area]
-  C --> C1[/admin/dashboard]
-  C --> C2[/admin/orders]
-  C --> C3[/admin/users]
-  D --> D1[/]
-  D --> D2[/categories]
-  D --> D3[/cart]
-  D --> D4[/profile]
+  A["Guest"] -->|Login| B["Supabase Auth"]
+  B -->|role=admin| C["Admin Area"]
+  B -->|role=user| D["Customer Area"]
+  C --> C1["/admin/dashboard"]
+  C --> C2["/admin/orders"]
+  C --> C3["/admin/users"]
+  D --> D1["/"]
+  D --> D2["/categories"]
+  D --> D3["/cart"]
+  D --> D4["/profile"]
 ```
 
 **Stack**
