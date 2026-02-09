@@ -1,11 +1,11 @@
 {
-    "name": "copang",
-    "short_name": "copang",
+    "name": "미용재료 쇼핑몰",
+    "short_name": "미용재료 쇼핑몰",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "미용재료 쇼핑몰 Flutter 웹 앱입니다.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
