@@ -1,6 +1,7 @@
 {
   "routes": [
     { "handle": "filesystem" },
+    { "src": "/api/(.*)", "dest": "https://shopping-mall-28fy.onrender.com/api/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
