@@ -1,20 +1,17 @@
-// This is a basic Flutter widget test.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:copang/src/app.dart';
-import 'package:copang/src/features/auth/domain/app_user.dart';
-import 'package:copang/src/features/auth/presentation/auth_controller.dart';
-import 'package:copang/src/features/products/domain/product.dart';
-import 'package:copang/src/features/products/data/supabase_product_repository.dart';
-import 'package:copang/src/features/orders/domain/order.dart';
-import 'package:copang/src/features/orders/data/supabase_order_repository.dart';
-import 'package:copang/src/features/users/domain/user_profile.dart';
-import 'package:copang/src/features/users/data/supabase_user_repository.dart';
+import 'package:shopping_mall/src/app.dart';
+import 'package:shopping_mall/src/features/auth/domain/app_user.dart';
+import 'package:shopping_mall/src/features/auth/presentation/auth_controller.dart';
+import 'package:shopping_mall/src/features/products/domain/product.dart';
+import 'package:shopping_mall/src/features/products/data/supabase_product_repository.dart';
+import 'package:shopping_mall/src/features/orders/domain/order.dart';
+import 'package:shopping_mall/src/features/orders/data/supabase_order_repository.dart';
+import 'package:shopping_mall/src/features/users/domain/user_profile.dart';
+import 'package:shopping_mall/src/features/users/data/supabase_user_repository.dart';
 
-// Mock AuthController
 class MockAuthController extends StateNotifier<AppUser?> implements AuthController {
   MockAuthController() : super(null);
 
@@ -33,7 +30,7 @@ class MockAuthController extends StateNotifier<AppUser?> implements AuthControll
 
   @override
   Future<bool> signUp({required String email, required String password}) async {
-    return true; // Mock success
+    return true;
   }
 
   @override
@@ -42,13 +39,12 @@ class MockAuthController extends StateNotifier<AppUser?> implements AuthControll
   }
 }
 
-// Mock Product Repository
 class MockProductRepository implements SupabaseProductRepository {
   final List<Product> _products = [
     const Product(
       id: '1',
-      title: 'Premium Hair Shampoo',
-      description: 'Desc',
+      title: '프리미엄 헤어 샴푸',
+      description: '풍성하고 윤기 있는 모발을 위한 프리미엄 샴푸.',
       price: 25.0,
       imageUrl: '',
       category: 'Hair',
@@ -76,19 +72,15 @@ class MockProductRepository implements SupabaseProductRepository {
   }
 
   @override
-  Future<void> updateProduct(Product product) async {
-  }
+  Future<void> updateProduct(Product product) async {}
 
   @override
-  Future<void> deleteProduct(String id) async {
-  }
-  
+  Future<void> deleteProduct(String id) async {}
+
   @override
-  // ignore: unused_element
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-// Mock Order Repository
 class MockOrderRepository implements SupabaseOrderRepository {
   final List<Order> _orders = [
     Order(
@@ -107,15 +99,12 @@ class MockOrderRepository implements SupabaseOrderRepository {
   }
 
   @override
-  Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
-  }
+  Future<void> updateOrderStatus(String orderId, OrderStatus status) async {}
 
   @override
-  // ignore: unused_element
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-// Mock User Repository
 class MockUserRepository implements SupabaseUserRepository {
   final List<UserProfile> _users = [
     UserProfile(
@@ -132,11 +121,9 @@ class MockUserRepository implements SupabaseUserRepository {
   }
 
   @override
-  Future<void> updateUserRole(String userId, UserRole role) async {
-  }
+  Future<void> updateUserRole(String userId, UserRole role) async {}
 
   @override
-  // ignore: unused_element
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -159,16 +146,13 @@ void main() {
       ),
     );
 
-    // Verify Login Screen
     expect(find.text('로그인'), findsAtLeastNWidgets(1));
 
-    // Login as User
     await tester.enterText(find.byType(TextFormField).first, 'test1@example.com');
     await tester.enterText(find.byType(TextFormField).last, '1111');
     await tester.tap(find.widgetWithText(ElevatedButton, '로그인'));
     await tester.pumpAndSettle();
 
-    // Verify Home Screen UI
     expect(find.text('카테고리별 쇼핑'), findsOneWidget);
   });
 
@@ -190,20 +174,16 @@ void main() {
       ),
     );
 
-    // Login as Admin
     await tester.enterText(find.byType(TextFormField).first, 'admin@example.com');
     await tester.enterText(find.byType(TextFormField).last, '1111');
     await tester.tap(find.widgetWithText(ElevatedButton, '로그인'));
     await tester.pumpAndSettle();
 
-    // Verify Admin Dashboard
     expect(find.text('관리자 대시보드'), findsOneWidget);
 
-    // Navigate to Users
     await tester.tap(find.byIcon(Icons.people));
     await tester.pumpAndSettle();
 
-    // Verify User List
     expect(find.text('사용자 관리'), findsOneWidget);
     expect(find.text('test1@test.com'), findsOneWidget);
   });

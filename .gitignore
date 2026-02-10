@@ -48,3 +48,4 @@ app.*.map.json
 .env*.local
 /server/.gradle
 /server/build
+/server/bin
