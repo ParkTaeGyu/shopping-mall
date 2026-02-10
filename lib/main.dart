@@ -7,10 +7,13 @@ import 'src/app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/env/app.env");
-  
+
+  final supabaseUrl = dotenv.env['SUPABASE_URL'] ?? 'https://zgwhwxfmyvrtmtgzrmxq.supabase.co';
+  final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'] ?? 'sb_publishable_46AylNhD376NmXPLttJLmA_SoHy7NK3';
+
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL'] ?? '',
-    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
   );
 
   runApp(const ProviderScope(child: MyApp()));
