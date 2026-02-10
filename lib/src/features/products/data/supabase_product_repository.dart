@@ -1,15 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:dio/dio.dart';
+import '../../../core/api_client.dart';
 import '../domain/product.dart';
 
 class SupabaseProductRepository {
-  final SupabaseClient _client;
+  final Dio _dio;
 
-  SupabaseProductRepository(this._client);
+  SupabaseProductRepository(this._dio);
 
   Future<List<Product>> getProducts() async {
-    final response = await _client.from('products').select();
-    final List<dynamic> data = response as List<dynamic>;
+    final response = await _dio.get('/api/products');
+    final List<dynamic> data = response.data as List<dynamic>;
     return data.map((json) => Product(
       id: json['id'].toString(),
       title: json['title'],
@@ -21,9 +22,9 @@ class SupabaseProductRepository {
   }
 
   Future<Product?> getProduct(String id) async {
-    final response = await _client.from('products').select().eq('id', id).maybeSingle();
-    if (response == null) return null;
-    final json = response;
+    final response = await _dio.get('/api/products/$id');
+    if (response.statusCode == 404) return null;
+    final json = response.data as Map<String, dynamic>;
     return Product(
       id: json['id'].toString(),
       title: json['title'],
@@ -35,8 +36,10 @@ class SupabaseProductRepository {
   }
 
   Future<List<Product>> getProductsByCategory(String category) async {
-    final response = await _client.from('products').select().eq('category', category);
-    final List<dynamic> data = response as List<dynamic>;
+    final response = await _dio.get('/api/products', queryParameters: {
+      'category': category,
+    });
+    final List<dynamic> data = response.data as List<dynamic>;
     return data.map((json) => Product(
       id: json['id'].toString(),
       title: json['title'],
@@ -48,32 +51,32 @@ class SupabaseProductRepository {
   }
 
   Future<void> addProduct(Product product) async {
-    await _client.from('products').insert({
+    await _dio.post('/api/admin/products', data: {
       'title': product.title,
       'description': product.description,
       'price': product.price,
-      'image_url': product.imageUrl,
+      'imageUrl': product.imageUrl,
       'category': product.category,
     });
   }
 
   Future<void> updateProduct(Product product) async {
-    await _client.from('products').update({
+    await _dio.put('/api/admin/products/${product.id}', data: {
       'title': product.title,
       'description': product.description,
       'price': product.price,
-      'image_url': product.imageUrl,
+      'imageUrl': product.imageUrl,
       'category': product.category,
-    }).eq('id', product.id);
+    });
   }
 
   Future<void> deleteProduct(String id) async {
-    await _client.from('products').delete().eq('id', id);
+    await _dio.delete('/api/admin/products/$id');
   }
 }
 
 final supabaseProductRepositoryProvider = Provider<SupabaseProductRepository>((ref) {
-  return SupabaseProductRepository(Supabase.instance.client);
+  return SupabaseProductRepository(ref.watch(dioProvider));
 });
 
 final productsListProvider = FutureProvider.family<List<Product>, String>((ref, category) {
