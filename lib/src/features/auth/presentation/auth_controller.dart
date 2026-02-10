@@ -45,7 +45,7 @@ class AuthController extends StateNotifier<AppUser?> {
         return false;
       }
 
-      await Supabase.instance.client.auth.setSession(accessToken, refreshToken);
+      await Supabase.instance.client.auth.setSession(refreshToken);
       return true;
     } catch (_) {
       return false;
@@ -60,11 +60,10 @@ class AuthController extends StateNotifier<AppUser?> {
       });
 
       final data = response.data as Map<String, dynamic>;
-      final accessToken = data['access_token'] as String?;
       final refreshToken = data['refresh_token'] as String?;
 
-      if (accessToken != null && refreshToken != null) {
-        await Supabase.instance.client.auth.setSession(accessToken, refreshToken);
+      if (refreshToken != null) {
+        await Supabase.instance.client.auth.setSession(refreshToken);
       }
 
       return true;
