@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.cors")
 public class AppCorsProperties {
     private String allowedOrigins;
+    private String allowedOriginPatterns;
 
     public List<String> allowedOrigins() {
         if (allowedOrigins == null || allowedOrigins.isBlank()) {
@@ -21,7 +22,21 @@ public class AppCorsProperties {
             .toList();
     }
 
+    public List<String> allowedOriginPatterns() {
+        if (allowedOriginPatterns == null || allowedOriginPatterns.isBlank()) {
+            return List.of();
+        }
+        return Arrays.stream(allowedOriginPatterns.split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .toList();
+    }
+
     public void setAllowedOrigins(String allowedOrigins) {
         this.allowedOrigins = allowedOrigins;
+    }
+
+    public void setAllowedOriginPatterns(String allowedOriginPatterns) {
+        this.allowedOriginPatterns = allowedOriginPatterns;
     }
 }
