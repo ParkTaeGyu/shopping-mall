@@ -9,7 +9,6 @@ class AdminDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // We can reuse productsListProvider('all') to fetch all products
     final productsAsync = ref.watch(productsListProvider('all'));
 
     return Scaffold(
@@ -33,51 +32,63 @@ class AdminDashboardScreen extends ConsumerWidget {
         ],
       ),
       body: productsAsync.when(
-        data: (products) => ListView.builder(
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return ListTile(
-              leading: Container(
-                width: 50,
-                height: 50,
-                color: Colors.grey[200],
-                child: product.imageUrl.startsWith('http')
-                    ? Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                      )
-                    : const Icon(Icons.image, color: Colors.grey),
+        data: (products) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => context.go('/admin/dashboard/product/add'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('제품 등록'),
+                ),
               ),
-              title: Text(product.title),
-              subtitle: Text('\$${product.price}'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => context.go('/admin/dashboard/product/edit/${product.id}'),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () async {
-                      await ref.read(supabaseProductRepositoryProvider).deleteProduct(product.id);
-                      // Invalidate and refresh the provider
-                      ref.invalidate(productsListProvider('all'));
-                    },
-                  ),
-                ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return ListTile(
+                    leading: Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.grey[200],
+                      child: product.imageUrl.startsWith('http')
+                          ? Image.network(
+                              product.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                            )
+                          : const Icon(Icons.image, color: Colors.grey),
+                    ),
+                    title: Text(product.title),
+                    subtitle: Text('\$${product.price}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => context.go('/admin/dashboard/product/edit/${product.id}'),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            await ref.read(supabaseProductRepositoryProvider).deleteProduct(product.id);
+                            ref.invalidate(productsListProvider('all'));
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            );
-          },
+            ),
+          ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('오류: $err')),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/admin/dashboard/product/add'),
-        child: const Icon(Icons.add),
       ),
     );
   }
